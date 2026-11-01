@@ -74,3 +74,31 @@ In this course we connect with HTTPS. The steps I took:
   For my Visual Studio C++ project, I ignore the [`.vs`] folder and the [`x64`] build output folder. The [`.vs`] folder holds Visual Studio's local cache (settings, browse database) that only applies to my machine, and [`x64`] contains compiled .exe and object files - build artifacts that anyone can regenerate by building the solution themselves. Committing those would bloat the repository and cause conflicts, since they change on every single build.
 
 <br>
+```markdown
+# Reference Links
+
+Research Summary: The resource I found most helpful this week was GitHub's own documentation. Since I was actively setting up my project repo — creating branches, pushing commits, and building a Project board — having the official docs open while doing the real thing made the concepts stick far better than reading about them abstractly. The Mastering Markdown course materials from class were my go-to for the documentation syntax used in this very file.
+
+**Terminal Commands**  
+[Linux Command - 35 Linux Commands Every User Should Know]
+(https://www.hostinger.com/tutorials/linux-commands)
+
+**Three Types of Version Control**  
+[Git - About Version Control]
+(https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control)
+
+**Git Commands**  
+[Git Basics - Getting a Git Repository]
+(https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)  
+[Atlassian Git Cheat Sheet]
+(https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet)
+
+**Connecting to GitHub using Terminal**  
+[GitHub Docs - Cloning a repository]
+(https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)  
+[GitHub Docs - Managing your personal access tokens]
+(https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+
+**Using .gitignore and Why it's Important**  
+[GitHub Docs - Ignoring files]
+(https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files)
