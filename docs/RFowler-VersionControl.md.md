@@ -24,3 +24,7 @@ Professional developers use Terminal daily. It's essential to understand some fu
 - [`cd ..`]: Change directory, go up one folder level
 - [`cd ../..`]: Change directory, go up two folder levels
 - [`cd ~/Desktop`]: Change directory to my desktop
+
+**2. Using Terminal...**
+
+**Folder Drop:** I typed [`cd`] followed by a space, dragged a folder from my file explorer into the terminal window, and pressed return. The terminal automatically pasted the folder's full path after [`cd`], and the command changed my working directory into that folder. It's a fast shortcut - instead of typing out a long path by hand and risking typos, the OS fills in the exact path for you. I can see myself using this a lot when jumping into my project repo, since it's nested a few folders deep.
