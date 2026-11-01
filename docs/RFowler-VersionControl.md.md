@@ -36,3 +36,25 @@ Professional developers use Terminal daily. It's essential to understand some fu
 1. **Local version control** — changes are tracked in a database on a single computer (for example, RCS keeps a record of file diffs locally). Simple, but everything lives in one place, so if that machine dies, the history dies with it.
 2. **Centralized version control (CVCS)** — a single central server holds the entire version history, and everyone checks files in and out of that server (examples: Subversion, Perforce). Collaboration is easier, but the server is a single point of failure — if it goes down, nobody can save their work, and if it's lost without a backup, so is the history.
 3. **Distributed version control (DVCS)** — every developer has a complete copy of the repository, including its full history, on their own machine (examples: Git, Mercurial). There is no single point of failure, you can commit and browse history offline, and if the server dies, any clone can restore it. This is what Git is, and it's why cloning a repo gives you everything, not just the latest files.
+
+
+**2. Using Terminal, there are also essential Git commands to know.**
+
+- [`git clone [url]`]: Clone a repository — downloads a full copy of the repo (with history) to your machine
+- [`git config --global user.name "Your Name"`]: Set up a global user name
+- [`git config --global user.email "you@example.com"`]: Set up a global email address (to match my GitHub account email)
+- [`git status`]: Shows the current state of your directory and staging area — what's changed, what's staged, what's untracked
+- [`git add .`] (or [`git add [filename]`]): Add modified files to the next commit (stages them)
+- [`git commit -m "your message here"`]: Make a commit with a new message describing the changes
+- [`git log`]: Show my commit history — author, date, and message for each commit
+- [`git help`]: Show Git's help screen with the most common commands
+
+
+**3. Connecting to GitHub using Terminal.**
+
+In this course we connect with HTTPS. The steps I took:
+
+1. On GitHub, I opened my repository and clicked the green **Code** button, then copied the HTTPS URL.
+2. In Terminal, I ran [`git clone`] followed by that URL. Git downloaded the repository into a new folder on my machine.
+3. The first time Git needs to talk to GitHub (on the clone or the first push), it asks for my GitHub credentials. For the username I enter my GitHub username, and for the password I use a **personal access token** (generated on GitHub under Settings → Developer settings → Personal access tokens) because GitHub no longer accepts account passwords over HTTPS.
+4. After authenticating once, my credential manager stores the token, so later pushes and pulls don't ask again. From then on, the normal loop is [`git add .`], [`git commit -m "message"`], [`git push`].
