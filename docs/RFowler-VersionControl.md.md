@@ -58,3 +58,19 @@ In this course we connect with HTTPS. The steps I took:
 2. In Terminal, I ran [`git clone`] followed by that URL. Git downloaded the repository into a new folder on my machine.
 3. The first time Git needs to talk to GitHub (on the clone or the first push), it asks for my GitHub credentials. For the username I enter my GitHub username, and for the password I use a **personal access token** (generated on GitHub under Settings → Developer settings → Personal access tokens) because GitHub no longer accepts account passwords over HTTPS.
 4. After authenticating once, my credential manager stores the token, so later pushes and pulls don't ask again. From then on, the normal loop is [`git add .`], [`git commit -m "message"`], [`git push`].
+
+**4. Using .gitignore and Why it's Important**
+
+- **What is the purpose of this file?**
+  <br>
+  A .gitignore file tells Git which files and folders to ignore completely - Git won't track them, stage them, or include them in commits. It keeps the repository clean of files that don't belong in version control: build outputs, machine-specific settings, temp files, and anything large or auto-generated that teammates can recreate on their own machines.
+
+- **What is the ".DS_Store" file and why would you want to ignore it?**
+  <br>
+  .DS_Store is a hidden file macOS automatically creates in every folder you open in Finder. It stores Finder display preferences for that folder - icon positions, view settings, window size. It's pure local machine metadata: it has nothing to do with the project, it changes constantly, and it would just clutter every commit and cause pointless merge conflicts for teammates (especially teammates on Windows). So it's one of the first things most people add to .gitignore.
+
+- **What other file or folder would you want to add to a .gitignore file and why?**
+  <br>
+  For my Visual Studio C++ project, I ignore the [`.vs`] folder and the [`x64`] build output folder. The [`.vs`] folder holds Visual Studio's local cache (settings, browse database) that only applies to my machine, and [`x64`] contains compiled .exe and object files - build artifacts that anyone can regenerate by building the solution themselves. Committing those would bloat the repository and cause conflicts, since they change on every single build.
+
+<br>
