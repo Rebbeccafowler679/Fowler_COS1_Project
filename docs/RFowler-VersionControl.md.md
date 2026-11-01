@@ -28,3 +28,11 @@ Professional developers use Terminal daily. It's essential to understand some fu
 **2. Using Terminal...**
 
 **Folder Drop:** I typed [`cd`] followed by a space, dragged a folder from my file explorer into the terminal window, and pressed return. The terminal automatically pasted the folder's full path after [`cd`], and the command changed my working directory into that folder. It's a fast shortcut - instead of typing out a long path by hand and risking typos, the OS fills in the exact path for you. I can see myself using this a lot when jumping into my project repo, since it's nested a few folders deep.
+
+## Topic: Version Control & Git
+
+**1. There are three types of version control.**
+
+1. **Local version control** — changes are tracked in a database on a single computer (for example, RCS keeps a record of file diffs locally). Simple, but everything lives in one place, so if that machine dies, the history dies with it.
+2. **Centralized version control (CVCS)** — a single central server holds the entire version history, and everyone checks files in and out of that server (examples: Subversion, Perforce). Collaboration is easier, but the server is a single point of failure — if it goes down, nobody can save their work, and if it's lost without a backup, so is the history.
+3. **Distributed version control (DVCS)** — every developer has a complete copy of the repository, including its full history, on their own machine (examples: Git, Mercurial). There is no single point of failure, you can commit and browse history offline, and if the server dies, any clone can restore it. This is what Git is, and it's why cloning a repo gives you everything, not just the latest files.
