@@ -14,6 +14,12 @@ std::vector<Survivor>& Safehouse::GetSurvivors()
 int Safehouse::GetFood() const { return mFood; }
 void Safehouse::AddFood(int amount) { mFood += amount; }
 
+int Safehouse::GetAmmo() const { return mAmmo; }
+void Safehouse::AddAmmo(int amount) { mAmmo += amount; }
+
+int Safehouse::GetMaterials() const { return mMaterials; }
+void Safehouse::AddMaterials(int amount) { mMaterials += amount; }
+
 void Safehouse::PrintStatus() const
 {
 	std::cout << "=== SAFEHOUSE STATUS ===\n";

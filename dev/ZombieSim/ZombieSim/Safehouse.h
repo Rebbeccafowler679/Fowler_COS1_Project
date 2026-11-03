@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "Survivor.h"
 #include <vector>
 #include <string>
@@ -8,11 +7,16 @@ class Safehouse
 {
 public:
 	void AddSurvivor(const std::string& name);
-
 	std::vector<Survivor>& GetSurvivors();
 
 	int GetFood() const;
 	void AddFood(int amount);
+
+	int GetAmmo() const;
+	void AddAmmo(int amount);
+
+	int GetMaterials() const;
+	void AddMaterials(int amount);
 
 	void PrintStatus() const;
 

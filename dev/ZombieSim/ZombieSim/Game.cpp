@@ -1,8 +1,8 @@
 #include "Game.h"
+#include "Zombie.h"
 #include "Helper.h"
 #include <iostream>
 #include <cstdlib>
-
 
 void Game::Run()
 {
@@ -21,7 +21,6 @@ void Game::Run()
 		std::cout << "4. Quit\n";
 
 		unsigned int choice = Helper::GetMenuChoice(1, 4);
-
 		switch (choice)
 		{
 		case 1: ViewStatus(); break;
@@ -30,7 +29,6 @@ void Game::Run()
 		case 4: running = false; break;
 		}
 	}
-
 	std::cout << "You survived " << mDay << " day(s). Thanks for playing!\n";
 }
 
@@ -41,15 +39,13 @@ void Game::ViewStatus() const
 
 void Game::AssignTasks()
 {
-	// Set every survivor's task for the coming day.
 	for (Survivor& s : mSafehouse.GetSurvivors())
 	{
 		if (!s.IsAlive()) { continue; }
-
 		std::cout << "\nAssign " << s.GetName() << ":\n";
 		std::cout << "1. Scavenge  2. Defend  3. Rest\n";
 		unsigned int pick = Helper::GetMenuChoice(1, 3);
-		s.SetTask(static_cast<Task>(pick - 1));	// enum order matches menu order
+		s.SetTask(static_cast<Task>(pick - 1)); // enum order matches menu order
 	}
 }
 
@@ -63,7 +59,6 @@ void Game::NextDay()
 	{
 		if (s.IsAlive()) { mouths++; }
 	}
-
 	if (mSafehouse.GetFood() >= mouths)
 	{
 		mSafehouse.AddFood(-mouths);
@@ -71,14 +66,16 @@ void Game::NextDay()
 	}
 	else
 	{
-		// Not enough food: everyone still alive loses health.
-		mSafehouse.AddFood(-mSafehouse.GetFood());	// eat what's left
+		mSafehouse.AddFood(-mSafehouse.GetFood()); // eat what's left
 		std::cout << "Not enough food! The group goes hungry.\n";
 		for (Survivor& s : mSafehouse.GetSurvivors())
 		{
 			if (s.IsAlive()) { s.TakeDamage(10); }
 		}
 	}
+
+	// NEW: the night's zombie attack resolves against the defenders.
+	ResolveAttack();
 
 	// Rest heals.
 	for (Survivor& s : mSafehouse.GetSurvivors())
@@ -97,13 +94,19 @@ void Game::ResolveScavenging()
 	for (Survivor& s : mSafehouse.GetSurvivors())
 	{
 		if (!s.IsAlive()) { continue; }
-
 		if (s.GetTask() == Task::Scavenge)
 		{
-			int found = rand() % 4 + 1;	// 1-4 food per scavenger
+			int found = rand() % 4 + 1; // 1-4 food per scavenger
 			mSafehouse.AddFood(found);
 			std::cout << s.GetName() << " scavenged " << found << " food.\n";
 		}
-		// Defend does nothing yet — zombie attacks arrive in Week 2.
 	}
+}
+
+void Game::ResolveAttack()
+{
+	// Stack object per the design decision in prototype.md:
+	// the horde only exists for this one night's resolution.
+	Zombie horde(mDay);
+	horde.Attack(mSafehouse);
 }

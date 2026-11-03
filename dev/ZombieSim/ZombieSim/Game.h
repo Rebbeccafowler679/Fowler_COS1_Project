@@ -4,14 +4,14 @@
 class Game
 {
 public:
-	void Run();		// owns the whole program loop
+	void Run(); // owns the whole program loop
 
 private:
-	void PrintMenu() const;
 	void ViewStatus() const;
 	void AssignTasks();
 	void NextDay();
 	void ResolveScavenging();
+	void ResolveAttack(); // NEW: nightly zombie horde
 
 	Safehouse mSafehouse;
 	int mDay = 1;
