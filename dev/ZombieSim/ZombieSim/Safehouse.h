@@ -8,6 +8,7 @@ class Safehouse
 public:
 	void AddSurvivor(const std::string& name);
 	std::vector<Survivor>& GetSurvivors();
+	int GetAliveCount() const; // NEW: how many survivors are still alive
 
 	int GetFood() const;
 	void AddFood(int amount);

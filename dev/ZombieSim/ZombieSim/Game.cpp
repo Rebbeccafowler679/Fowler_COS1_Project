@@ -6,13 +6,12 @@
 
 void Game::Run()
 {
-	// Starting roster — Milestone 1 keeps it fixed.
 	mSafehouse.AddSurvivor("Maya");
 	mSafehouse.AddSurvivor("Dre");
 	mSafehouse.AddSurvivor("Sam");
 
 	bool running = true;
-	while (running)
+	while (running && !mGameOver) // loop now stops on game over too
 	{
 		std::cout << "\n===== ZOMBIE SURVIVAL - Day " << mDay << " =====\n";
 		std::cout << "1. View status\n";
@@ -29,7 +28,13 @@ void Game::Run()
 		case 4: running = false; break;
 		}
 	}
-	std::cout << "You survived " << mDay << " day(s). Thanks for playing!\n";
+
+	// Only print this if the player quit on purpose.
+	// A game over prints its own screen in CheckGameOver().
+	if (!mGameOver)
+	{
+		std::cout << "You walked away on day " << mDay << ". The safehouse is on its own.\n";
+	}
 }
 
 void Game::ViewStatus() const
@@ -45,7 +50,7 @@ void Game::AssignTasks()
 		std::cout << "\nAssign " << s.GetName() << ":\n";
 		std::cout << "1. Scavenge  2. Defend  3. Rest\n";
 		unsigned int pick = Helper::GetMenuChoice(1, 3);
-		s.SetTask(static_cast<Task>(pick - 1)); // enum order matches menu order
+		s.SetTask(static_cast<Task>(pick - 1));
 	}
 }
 
@@ -66,7 +71,7 @@ void Game::NextDay()
 	}
 	else
 	{
-		mSafehouse.AddFood(-mSafehouse.GetFood()); // eat what's left
+		mSafehouse.AddFood(-mSafehouse.GetFood());
 		std::cout << "Not enough food! The group goes hungry.\n";
 		for (Survivor& s : mSafehouse.GetSurvivors())
 		{
@@ -74,10 +79,12 @@ void Game::NextDay()
 		}
 	}
 
-	// NEW: the night's zombie attack resolves against the defenders.
 	ResolveAttack();
 
-	// Rest heals.
+	// NEW: if the horde finished off the last survivor, the game ends now.
+	CheckGameOver();
+	if (mGameOver) { return; } // skip rest/day counter; nobody left
+
 	for (Survivor& s : mSafehouse.GetSurvivors())
 	{
 		if (s.IsAlive() && s.GetTask() == Task::Rest)
@@ -96,7 +103,7 @@ void Game::ResolveScavenging()
 		if (!s.IsAlive()) { continue; }
 		if (s.GetTask() == Task::Scavenge)
 		{
-			int found = rand() % 4 + 1; // 1-4 food per scavenger
+			int found = rand() % 4 + 1;
 			mSafehouse.AddFood(found);
 			std::cout << s.GetName() << " scavenged " << found << " food.\n";
 		}
@@ -105,8 +112,16 @@ void Game::ResolveScavenging()
 
 void Game::ResolveAttack()
 {
-	// Stack object per the design decision in prototype.md:
-	// the horde only exists for this one night's resolution.
 	Zombie horde(mDay);
 	horde.Attack(mSafehouse);
+}
+
+void Game::CheckGameOver()
+{
+	if (mSafehouse.GetAliveCount() > 0) { return; } // someone made it; keep playing
+
+	mGameOver = true;
+	std::cout << "\n===== GAME OVER =====\n";
+	std::cout << "The last survivor has fallen. The safehouse is lost.\n";
+	std::cout << "You survived " << mDay << " day(s).\n";
 }

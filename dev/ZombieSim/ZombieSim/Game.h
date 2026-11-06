@@ -11,8 +11,10 @@ private:
 	void AssignTasks();
 	void NextDay();
 	void ResolveScavenging();
-	void ResolveAttack(); // NEW: nightly zombie horde
+	void ResolveAttack();
+	void CheckGameOver(); // NEW: ends the game when everyone is dead
 
 	Safehouse mSafehouse;
 	int mDay = 1;
+	bool mGameOver = false; // NEW
 };

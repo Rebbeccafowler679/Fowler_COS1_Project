@@ -32,3 +32,13 @@ void Safehouse::PrintStatus() const
 			<< (s.IsAlive() ? "" : " (DEAD)") << "\n";
 	}
 }
+
+int Safehouse::GetAliveCount() const
+{
+	int count = 0;
+	for (const Survivor& s : mSurvivors)
+	{
+		if (s.IsAlive()) { count++; }
+	}
+	return count;
+}
