@@ -22,6 +22,32 @@
 
 - Implemented game over condition: GetAliveCount() in Safehouse, mGameOver flag in Game,
   end screen prints days survived; loop exits cleanly
+  
+  ## Game over condition and end screen
+
+- Added `GetAliveCount()` to Safehouse so Game can ask one question instead of looping the roster itself.
+- Added `CheckGameOver()` to Game, called right after the nightly attack in NextDay(). If no survivors are alive it flips an mGameOver flag, prints a GAME OVER screen with the final day count, and the menu loop exits cleanly.
+- Design note: on the game over day, rest healing, the day summary, and the day counter are all skipped - the GAME OVER screen is the ending.
+- Bug found: LNK2019 unresolved external `Survivor::GetTaskName()`. The header declared the function but Survivor.cpp had no body for it. Linker errors mean "promised but never delivered" - different from IntelliSense E-codes. Fixed by writing the definition with a switch over the Task enum.
+- Verified by playing with no defenders assigned: horde broke through each night, survivors died one by one, game ended on its own with the correct day count.
+
+## Day summary screen
+
+- Added `PrintDaySummary()` to Game, called at the end of NextDay() after rest healing and before the day counter advances.
+- Prints one labeled block: survivors alive out of total, food/ammo/materials totals, and each survivor's HP with a (DEAD) marker.
+- Usability goal: the player no longer scrolls back through scattered lines to figure out what happened that day.
+- Note: it is not a const method because GetSurvivors() is not const - a const summary function would not compile.
+
+## Usability pass
+
+- Task assignment prompts now say what each task does and costs (Defend = 1 ammo per kill, 3 HP hand-to-hand; Rest = +5 HP).
+- Verified menu input handling with bad inputs (letters, 0, out-of-range numbers) - Helper::GetMenuChoice re-asks without crashing.
+
+## Code comments
+
+- Added explanatory comments to all class files: Game.h/.cpp, Safehouse.h/.cpp, Survivor.h/.cpp, Zombie.h/.cpp.
+- Comments explain WHY decisions were made (stack horde, pointer target list, no health cap), not just what each line does.
+  
 ## Bugs / fixes[
 - [Zombie.cpp: typo "Survior" (missing second v) in the defender-counting loop caused
   [E0020 "identifier is undefined" — fixed spelling to Survivor
