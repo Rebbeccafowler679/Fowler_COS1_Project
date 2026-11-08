@@ -2,7 +2,7 @@
 > Be clear, specific, and intentional—this will guide your development this week.
 
 ---
-## 📌 Project Overview
+##  Project Overview
 
 **Project Name:**
 → Zombie Survival Sim
@@ -11,7 +11,7 @@
 → It is a console survival game where the player manages a safehouse of three survivors. Each day the player assigns tasks (Scavenge, Defend, Rest), scavenging brings in food and ammo, survivors eat, and then a zombie horde attacks at night. The horde grows as the days go up, defenders repel zombies using ammo, and breakthrough zombies injure or kill survivors.
 
 ---
-## 🔍 Current Progress Check  
+##  Current Progress Check  
   
 **What is working right now?**   
 → The main menu loop, task assignment, the day cycle (scavenge, eat, attack, rest), resource tracking for food and ammo, and the new Zombie class with the nightly attack resolution. Survivors can be injured, die, and heal on rest.
@@ -23,7 +23,7 @@
 → The attack output and eating output are mixed together in one long scroll, which makes it hard to tell what happened on which day. NextDay() is also getting long as more steps get added to the day cycle.
 
 ---
-## 🚀 Feature Planning  
+## Feature Planning  
   
 List the features you plan to add or improve this week.  
   
@@ -61,7 +61,7 @@ List the features you plan to add or improve this week.
 → New players should not have to guess the rules. Showing the cost of Defend up front helps the player make an informed choice instead of learning by losing survivors.  
   
 ---
-## 🧩 System Design Updates  
+## System Design Updates  
   
 **Will you need to create any new classes? If so, which ones?**   
 → No new classes this week. The three classes (Game, Safehouse, Survivor) plus Zombie already cover the design. 
@@ -72,8 +72,8 @@ List the features you plan to add or improve this week.
 **What data structures will you use (vectors, 2D vectors, etc.)?**   
 → The existing vector<Survivor> in Safehouse, plain int counters for resources, and enum class Task for assignments. The Zombie horde stays a stack object created fresh each night since it does not need to outlive the attack.  
   
----
-## 🔄 Program Flow  
+
+## Program Flow  
   
 **Describe how a user interacts with your program:**  
   
@@ -82,8 +82,8 @@ List the features you plan to add or improve this week.
 3. Program responds → Starting the next day runs scavenging, eating, the zombie attack, and rest healing, then prints the day summary.  
 4. Loop/next step → Returns to the menu for the next day. If all survivors are dead, the game over screen prints with the final day count and the program ends.
   
----
-## 🎯 Usability Improvements  
+
+## Usability Improvements  
   
 How will you make your program easier to use this week?  
   
@@ -96,8 +96,8 @@ How will you make your program easier to use this week?
 - Improved menu/navigation:   
 → The day summary screen groups each day's events into one labeled block, so the console reads as a series of days instead of one long unbroken scroll.  
   
----
-## ⚠️ Potential Challenges  
+
+## Potential Challenges  
   
 **What do you think will be the hardest part this week?**   
 → Getting the game over check in the right place. It has to run after the attack but before the menu shows again, and I need to make sure dead survivors are handled correctly in the summary without the loop printing stale info.  
@@ -105,9 +105,9 @@ How will you make your program easier to use this week?
 **What is your plan if you get stuck?**   
 →  Rebuild first to separate real compiler errors from stale IntelliSense squiggles, read the Error List file and line, and isolate the problem in a small test before changing more code. That process worked for the E0020 typo bugs this week. 
   
----
+
   
-## 📈 Level Up Goal  
+## Level Up Goal  
   
 **What skill are you focusing on improving this week?**   
 → Memory management discipline: knowing when an object should live on the stack versus the heap.  
@@ -116,8 +116,8 @@ How will you make your program easier to use this week?
 (e.g., tutorial, practice, debugging, office hours)   
 → Apply it in real decisions, like keeping the nightly Zombie horde on the stack because it only exists for one attack, and write down the reasoning in my design notes so the choice is deliberate instead of a habit. 
   
----
-## 🗓️ Task Breakdown (GitHub Issues Planning)  
+
+## Task Breakdown (GitHub Issues Planning)  
   
 List the tasks you plan to create as GitHub Issues:  
 - Add game over condition and end screen
@@ -126,18 +126,17 @@ List the tasks you plan to create as GitHub Issues:
 - PR dev into main and submit Milestone 2
 ---
   
-## 🔥 Final Check  
+##  Final Check  
   
 Before you start coding, ask yourself:  
   
-- [yes] Do I know what I’m building this week?   
-- [yes] Do I know where to start?   
-- [yes] Did I break my work into small tasks?   
+[yes] Do I know what I’m building this week?   
+[yes] Do I know where to start?   
+[yes] Did I break my work into small tasks?   
   
-If yes → start coding 🚀   
+If yes → start coding    
 If no → refine your plan first   
   
----
-## 😈 Final Thought  
+##  Final Thought  
   
-> Plan it now… or debug it later.
+ Plan it now… or debug it later.

@@ -20,6 +20,8 @@
 - Safehouse gained ammo/materials getters and setters to support the attack mechanics
 - Tested: no defenders = full breakthrough damage; with defenders = ammo spent, horde repelled
 
+- Implemented game over condition: GetAliveCount() in Safehouse, mGameOver flag in Game,
+  end screen prints days survived; loop exits cleanly
 ## Bugs / fixes[
 - [Zombie.cpp: typo "Survior" (missing second v) in the defender-counting loop caused
   [E0020 "identifier is undefined" — fixed spelling to Survivor
@@ -28,3 +30,13 @@
   [E0020s plus an E0065 "expected a ;" as fallout — made the names match
 
 - [Lesson reinforced: E-codes are IntelliSense; after fixing, Rebuild before trusting the Error List]
+-
+- [- E0135 "class Survivor has no member GetTaskName" at Safehouse.cpp when   wiring up the status-screen task display. Cause: the multi-file change needed three edits
+-
+- [(Survivor.h declaration, Survivor.cpp implementation, Safehouse.cpp call site) and
+  [the .h declaration never got saved, so the compiler found the call but not the method.
+-
+-  [Fix: added `std::string GetTaskName() const;` to the public section of   Survivor.h,
+   [saved, Rebuild. Lesson: with changes that span files, check every file got its
+   [edit before trusting the Error List — and E-codes are IntelliSense, so Rebuild
+   [before believing them.] 

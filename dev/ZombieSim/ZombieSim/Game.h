@@ -1,20 +1,24 @@
 #pragma once
 #include "Safehouse.h"
 
+// Game
+// Owns the whole program: the menu loop, the day cycle, and the win/lose state.
+// It holds one Safehouse and talks to the Zombie class once per night.
 class Game
 {
 public:
-	void Run(); // owns the whole program loop
+	void Run(); // starts the program and loops the main menu until quit or game over
 
 private:
-	void ViewStatus() const;
-	void AssignTasks();
-	void NextDay();
-	void ResolveScavenging();
-	void ResolveAttack();
-	void CheckGameOver(); // NEW: ends the game when everyone is dead
+	void ViewStatus() const;   // prints the safehouse status screen (menu option 1)
+	void AssignTasks();        // lets the player give each living survivor a task (menu option 2)
+	void NextDay();            // runs one full day: scavenge, eat, attack, rest, summary
+	void ResolveScavenging();  // handles food/ammo gains for survivors on Scavenge duty
+	void ResolveAttack();      // creates the nightly zombie horde and lets it attack
+	void CheckGameOver();      // ends the game when no survivors are left alive
+	void PrintDaySummary();    // prints one recap block at the end of each day
 
-	Safehouse mSafehouse;
-	int mDay = 1;
-	bool mGameOver = false; // NEW
+	Safehouse mSafehouse;  // the safehouse: resources + the survivor roster
+	int mDay = 1;          // current day number, used for display and horde scaling
+	bool mGameOver = false; // flips to true when the last survivor dies
 };
