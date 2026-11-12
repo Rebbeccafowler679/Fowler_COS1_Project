@@ -66,53 +66,20 @@ void Game::AssignTasks()
 	}
 }
 
-// Runs one full day in order:
-// scavenge -> eat -> zombie attack -> game over check -> rest healing -> summary.
+// Runs one full day by calling each phase in order.
+// Refactored in Week 3: each phase is its own function, so this
+// reads like a summary of the day instead of a wall of code.
 void Game::NextDay()
 {
 	ResolveScavenging();
-
-	// count how many mouths need feeding
-	int mouths = 0;
-	for (Survivor& s : mSafehouse.GetSurvivors())
-	{
-		if (s.IsAlive()) { mouths++; }
-	}
-
-	if (mSafehouse.GetFood() >= mouths)
-	{
-		// enough food: everyone eats 1
-		mSafehouse.AddFood(-mouths);
-		std::cout << "The group ate " << mouths << " food.\n";
-	}
-	else
-	{
-		// not enough: food hits zero and hunger deals 10 damage to each survivor
-		mSafehouse.AddFood(-mSafehouse.GetFood());
-		std::cout << "Not enough food! The group goes hungry.\n";
-		for (Survivor& s : mSafehouse.GetSurvivors())
-		{
-			if (s.IsAlive()) { s.TakeDamage(10); }
-		}
-	}
-
+	ResolveEating();
 	ResolveAttack();
 
-	// if the attack (or hunger) killed the last survivor, end here:
-	// skip healing, skip the summary, and do not advance the day counter
 	CheckGameOver();
-	if (mGameOver) { return; }
+	if (mGameOver) { return; } // skip healing and summary on the final day
 
-	// survivors assigned to Rest recover 5 HP
-	for (Survivor& s : mSafehouse.GetSurvivors())
-	{
-		if (s.IsAlive() && s.GetTask() == Task::Rest)
-		{
-			s.Heal(5);
-		}
-	}
-
-	PrintDaySummary(); // recap everything that happened today
+	ResolveResting();
+	PrintDaySummary();
 
 	++mDay;
 }
@@ -140,6 +107,34 @@ void Game::ResolveScavenging()
 	}
 }
 
+// Each living survivor eats 1 food. If there is not enough,
+// food hits zero and hunger deals 10 damage to everyone alive.
+void Game::ResolveEating()
+{
+	// count how many mouths need feeding
+	int mouths = 0;
+	for (Survivor& s : mSafehouse.GetSurvivors())
+	{
+		if (s.IsAlive()) { mouths++; }
+	}
+
+	if (mSafehouse.GetFood() >= mouths)
+	{
+		// enough food: everyone eats 1
+		mSafehouse.AddFood(-mouths);
+		std::cout << "The group ate " << mouths << " food.\n";
+	}
+	else
+	{
+		mSafehouse.AddFood(-mSafehouse.GetFood());
+		std::cout << "Not enough food! The group goes hungry.\n";
+		for (Survivor& s : mSafehouse.GetSurvivors())
+		{
+			if (s.IsAlive()) { s.TakeDamage(10); }
+		}
+	}
+}
+
 // Build tonight's horde on the stack and let it attack the safehouse.
 // The horde only exists for this one call, so it does not need the heap.
 void Game::ResolveAttack()
@@ -158,6 +153,18 @@ void Game::CheckGameOver()
 	std::cout << "\n===== GAME OVER =====\n";
 	std::cout << "The last survivor has fallen. The safehouse is lost.\n";
 	std::cout << "You survived " << mDay << " day(s).\n";
+}
+
+// Survivors assigned to Rest recover 5 HP.
+void Game::ResolveResting()
+{
+	for (Survivor& s : mSafehouse.GetSurvivors())
+	{
+		if (s.IsAlive() && s.GetTask() == Task::Rest)
+		{
+			s.Heal(5);
+		}
+	}
 }
 
 // Prints one labeled recap block so the player can see the day's results
