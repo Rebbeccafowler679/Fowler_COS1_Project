@@ -5,11 +5,11 @@
 #include <cstdlib> // for rand()
 
 // Constructor: horde size grows with the day number.
-// Base of 1, +1 every 2 days, plus 0-2 random so each night
-// is a little unpredictable. Day 1 = 1-3 zombies, day 10 = 6-8.
 Zombie::Zombie(int day)
 {
-	mHordeSize = 1 + (day / 2) + (rand() % 3);
+	// Week 3: horde grows by 2 every night (day 1 = 2-3 zombies),
+	// with a small random term so nights are not perfectly predictable
+	mHordeSize = (day * 2) + (rand() % 2);
 }
 
 int Zombie::GetHordeSize() const
