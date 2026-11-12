@@ -82,6 +82,7 @@ void Game::NextDay()
 	PrintDaySummary();
 
 	++mDay;
+	CheckNewArrival(); // check for a new survivor as the new day begins
 }
 
 // Every living survivor on Scavenge duty finds 1-4 food,
@@ -183,4 +184,21 @@ void Game::PrintDaySummary()
 			<< (s.IsAlive() ? "" : " (DEAD)") << "\n";
 	}
 	std::cout << "----------------------------\n";
+}
+
+// Every 3rd day (day 3, 6, 9...) a new survivor joins the safehouse.
+// The roster is capped at 6 so task assignment stays manageable.
+void Game::CheckNewArrival()
+{
+	if (mDay % 3 != 0) { return; }                    // not an arrival day
+	if (mSafehouse.GetSurvivors().size() >= 6) { return; } // roster full
+
+	// cycle through a small pool of names for newcomers
+	static const char* names[] = { "Rae", "Kai", "Juno" };
+	static int nextName = 0;
+	std::string name = names[nextName % 3];
+	nextName++;
+
+	mSafehouse.AddSurvivor(name);
+	std::cout << "\n*** " << name << " has joined the safehouse! ***\n";
 }

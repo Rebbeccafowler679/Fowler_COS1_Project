@@ -17,6 +17,7 @@ private:
 	void ResolveEating();      // survivors eat 1 food each; hunger deals damage if short
 	void ResolveAttack();      // creates the nightly zombie horde and lets it attack
 	void CheckGameOver();      // ends the game when no survivors are left alive
+	void CheckNewArrival();  // new survivor joins every 3 days (roster cap 6)
 	void ResolveResting();     // survivors assigned to Rest heal 5 HP
 	void PrintDaySummary();    // prints one recap block at the end of each day
 
