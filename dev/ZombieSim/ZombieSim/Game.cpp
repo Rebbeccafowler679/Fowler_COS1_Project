@@ -20,16 +20,18 @@ void Game::Run()
 		std::cout << "1. View status\n";
 		std::cout << "2. Assign tasks\n";
 		std::cout << "3. Next day\n";
-		std::cout << "4. Quit\n";
+		std::cout << "4. Build barricade (3 materials = +2 barricade HP)\n";
+		std::cout << "5. Quit\n";
 
 		// Helper re-asks until the player enters a number in range
-		unsigned int choice = Helper::GetMenuChoice(1, 4);
+		unsigned int choice = Helper::GetMenuChoice(1, 5);
 		switch (choice)
 		{
 		case 1: ViewStatus(); break;
 		case 2: AssignTasks(); break;
 		case 3: NextDay(); break;
-		case 4: running = false; break;
+		case 4: BuildBarricade(); break;
+		case 5: running = false; break;
 		}
 	}
 
@@ -55,7 +57,8 @@ void Game::AssignTasks()
 		if (!s.IsAlive()) { continue; } // dead survivors get no tasks
 
 		std::cout << "\nAssign " << s.GetName() << " (HP " << s.GetHealth() << "):\n";
-		std::cout << "1. Scavenge (find 1-4 food, 30% chance of 1-2 ammo)\n";
+		std::cout << "1. Scavenge (find 1-4 food and 1-2 materials,\n";
+		std::cout << "            30% chance of 1-2 ammo)\n";
 		std::cout << "2. Defend (repel up to 2 zombies each, 1 ammo per kill;\n";
 		std::cout << "            fights hand-to-hand and takes 3 HP if no ammo)\n";
 		std::cout << "3. Rest (heal 5 HP)\n";
@@ -85,8 +88,8 @@ void Game::NextDay()
 	CheckNewArrival(); // check for a new survivor as the new day begins
 }
 
-// Every living survivor on Scavenge duty finds 1-4 food,
-// with a 30% chance of also finding 1-2 ammo.
+// Every living survivor on Scavenge duty finds 1-4 food and
+// 1-2 materials, with a 30% chance of also finding 1-2 ammo.
 void Game::ResolveScavenging()
 {
 	for (Survivor& s : mSafehouse.GetSurvivors())
@@ -97,6 +100,11 @@ void Game::ResolveScavenging()
 			int found = rand() % 4 + 1; // 1 to 4 food
 			mSafehouse.AddFood(found);
 			std::cout << s.GetName() << " scavenged " << found << " food.\n";
+
+			// materials are guaranteed, just like food
+			int mats = rand() % 2 + 1; // 1 to 2 materials
+			mSafehouse.AddMaterials(mats);
+			std::cout << s.GetName() << " also salvaged " << mats << " materials!\n";
 
 			if (rand() % 100 < 30)
 			{
@@ -167,7 +175,6 @@ void Game::ResolveResting()
 		}
 	}
 }
-
 // Prints one labeled recap block so the player can see the day's results
 // at a glance instead of scrolling back through scattered lines.
 void Game::PrintDaySummary()
@@ -177,7 +184,8 @@ void Game::PrintDaySummary()
 		<< " of " << mSafehouse.GetSurvivors().size() << "\n";
 	std::cout << "Food: " << mSafehouse.GetFood()
 		<< "  Ammo: " << mSafehouse.GetAmmo()
-		<< "  Materials: " << mSafehouse.GetMaterials() << "\n";
+		<< "  Materials: " << mSafehouse.GetMaterials()
+		<< "  Barricade HP: " << mSafehouse.GetBarricade() << "\n";
 	for (const Survivor& s : mSafehouse.GetSurvivors())
 	{
 		std::cout << "  " << s.GetName() << " | HP: " << s.GetHealth()
@@ -190,10 +198,11 @@ void Game::PrintDaySummary()
 // The roster is capped at 6 so task assignment stays manageable.
 void Game::CheckNewArrival()
 {
-	if (mDay % 3 != 0) { return; }                    // not an arrival day
+	if (mDay % 3 != 0) { return; }                         // not an arrival day
 	if (mSafehouse.GetSurvivors().size() >= 6) { return; } // roster full
 
 	// cycle through a small pool of names for newcomers
+	// static means the counter remembers its value between calls
 	static const char* names[] = { "Rae", "Kai", "Juno" };
 	static int nextName = 0;
 	std::string name = names[nextName % 3];
@@ -201,4 +210,24 @@ void Game::CheckNewArrival()
 
 	mSafehouse.AddSurvivor(name);
 	std::cout << "\n*** " << name << " has joined the safehouse! ***\n";
+}
+
+// Menu option 4: spend 3 materials to add 2 barricade HP.
+// Fails gracefully if the player cannot afford it.
+void Game::BuildBarricade()
+{
+	const int COST = 3;
+	const int HP_GAIN = 2;
+
+	if (mSafehouse.GetMaterials() < COST)
+	{
+		std::cout << "Not enough materials! Need " << COST
+			<< ", you have " << mSafehouse.GetMaterials() << ".\n";
+		return;
+	}
+
+	mSafehouse.AddMaterials(-COST);
+	mSafehouse.AddBarricade(HP_GAIN);
+	std::cout << "Barricade reinforced! +" << HP_GAIN << " barricade HP (now "
+		<< mSafehouse.GetBarricade() << ").\n";
 }

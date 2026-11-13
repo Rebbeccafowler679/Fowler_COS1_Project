@@ -21,8 +21,11 @@ public:
 	int GetAmmo() const;          // current ammo stock
 	void AddAmmo(int amount);     // spent by defenders, found by scavengers
 
-	int GetMaterials() const;     // saved for future features (repairs, upgrades)
+	int GetMaterials() const;    // salvaged by scavengers, spent on the barricade
 	void AddMaterials(int amount);
+
+	int GetBarricade() const;      // current barricade HP
+	void AddBarricade(int amount); // build up or take damage
 
 	void PrintStatus() const;     // the full status screen (menu option 1)
 
@@ -30,5 +33,6 @@ private:
 	int mFood = 10;                      // starting food
 	int mAmmo = 5;                       // starting ammo
 	int mMaterials = 0;                  // starting materials
+	int mBarricade = 0;                  // starts at zero - the player builds it up
 	std::vector<Survivor> mSurvivors;    // everyone living (and dead) in the safehouse
 };

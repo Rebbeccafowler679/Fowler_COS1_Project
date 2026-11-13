@@ -13,11 +13,12 @@ private:
 	void ViewStatus() const;   // prints the safehouse status screen (menu option 1)
 	void AssignTasks();        // lets the player give each living survivor a task (menu option 2)
 	void NextDay();            // runs one full day by calling each phase in order
-	void ResolveScavenging();  // handles food/ammo gains for survivors on Scavenge duty
+	void BuildBarricade();     // menu option: spend materials on barricade HP
+	void ResolveScavenging();  // handles food/ammo/materials gains for scavengers
 	void ResolveEating();      // survivors eat 1 food each; hunger deals damage if short
 	void ResolveAttack();      // creates the nightly zombie horde and lets it attack
 	void CheckGameOver();      // ends the game when no survivors are left alive
-	void CheckNewArrival();  // new survivor joins every 3 days (roster cap 6)
+	void CheckNewArrival();    // new survivor joins every 3 days (roster cap 6)
 	void ResolveResting();     // survivors assigned to Rest heal 5 HP
 	void PrintDaySummary();    // prints one recap block at the end of each day
 

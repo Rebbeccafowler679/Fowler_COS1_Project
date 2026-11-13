@@ -17,10 +17,11 @@ int Zombie::GetHordeSize() const
 	return mHordeSize;
 }
 
-// The nightly attack, resolved in three phases:
+// The nightly attack, resolved in four phases:
 //   1. Gun defense - defenders shoot zombies, 1 ammo per kill
 //   2. Hand-to-hand - defenders block leftovers with their bodies
-//   3. Breakthrough - anything unstopped hurts random survivors
+//   3. Barricade - built-up barricade HP absorbs breakthrough zombies
+//   4. Breakthrough - anything unstopped hurts random survivors
 void Zombie::Attack(Safehouse& safehouse) const
 {
 	std::cout << "\nA horde of " << mHordeSize << " zombie(s) attacks the safehouse!\n";
@@ -86,7 +87,27 @@ void Zombie::Attack(Safehouse& safehouse) const
 	}
 	std::cout << remaining << " zombie(s) broke through!\n";
 
-	// Phase 3: breakthrough zombies each deal 5 damage to a random
+	// Phase 3: the barricade absorbs breakthrough zombies first.
+	// Each barricade HP point blocks one zombie and is destroyed doing it.
+	int barricade = safehouse.GetBarricade();
+	if (barricade > 0 && remaining > 0)
+	{
+		int blocked = remaining;
+		if (blocked > barricade) { blocked = barricade; }
+
+		safehouse.AddBarricade(-blocked);
+		remaining -= blocked;
+		std::cout << "The barricade held back " << blocked
+			<< " zombie(s) but took " << blocked << " damage.\n";
+
+		if (remaining <= 0)
+		{
+			std::cout << "The barricade stopped everything. No one was hurt.\n";
+			return; // nothing got past the barricade
+		}
+	}
+
+	// Phase 4: breakthrough zombies each deal 5 damage to a random
 	// living survivor. Build a list of POINTERS to the living so we
 	// can remove the dead from the target pool without touching
 	// the real roster inside Safehouse.

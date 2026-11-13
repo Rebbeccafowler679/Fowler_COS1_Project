@@ -24,9 +24,19 @@ void Safehouse::AddFood(int amount) { mFood += amount; }
 int Safehouse::GetAmmo() const { return mAmmo; }
 void Safehouse::AddAmmo(int amount) { mAmmo += amount; }
 
-// Materials are tracked for future features (repairs, upgrades).
+// Materials getters/setters. Scavengers can salvage them,
+// and they are spent building the barricade.
 int Safehouse::GetMaterials() const { return mMaterials; }
 void Safehouse::AddMaterials(int amount) { mMaterials += amount; }
+
+// Barricade HP: built with materials, chewed through by breakthrough
+// zombies. Clamps at zero so it can never go negative.
+int Safehouse::GetBarricade() const { return mBarricade; }
+void Safehouse::AddBarricade(int amount)
+{
+	mBarricade += amount;
+	if (mBarricade < 0) { mBarricade = 0; } // never below zero
+}
 
 // Prints the full status screen: resource totals plus one line
 // per survivor with HP, assigned task, and a (DEAD) marker.
@@ -34,7 +44,8 @@ void Safehouse::PrintStatus() const
 {
 	std::cout << "=== SAFEHOUSE STATUS ===\n";
 	std::cout << "Food: " << mFood << "  Ammo: " << mAmmo
-		<< "  Materials: " << mMaterials << "\n";
+		<< "  Materials: " << mMaterials
+		<< "  Barricade HP: " << mBarricade << "\n";
 	std::cout << "Survivors:\n";
 	for (const Survivor& s : mSurvivors)
 	{
