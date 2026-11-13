@@ -11,13 +11,13 @@
 - Refactored: eating logic moved to ResolveEating(), rest healing moved to ResolveResting(). NextDay() now reads as a short list of the day's phases.
 - Pure refactor: no behavior changed. Verified by playing several days and comparing output before and after.
 
-## New feature: horde scaling (IN PROGRESS)
+## New feature: horde scaling 
 
 - Changed the horde formula from 1 + day/2 + random(0-2) to (day * 2) + random(0-1).
 - Day 1 now has 2-3 zombies, growing by 2 every night.
 - Reason: pairs with survivor arrivals so pressure keeps rising as the roster grows.
 
-## New feature: survivor arrivals (IN PROGRESS)
+## New feature: survivor arrivals 
 
 - Every 3rd day (3, 6, 9...) a new survivor joins the safehouse, with a welcome message.
 - Roster capped at 6 so task assignment stays manageable.
@@ -33,9 +33,31 @@
 
 - nothing new yet this week
 
-## Still to do
+## New feature: barricade system
 
-- Barricade building with materials (menu option, barricade HP, absorbs breakthrough zombies)
-- Edge case testing pass
-- Day summary: show arrivals and horde size
-- 10-day balance playthrough
+- Materials finally have a use: new main menu option "Build barricade" spends 3 materials for +2 barricade HP.
+- Barricade HP lives in Safehouse (GetBarricade/AddBarricade, clamped at zero).
+- Attack is now four phases: gun defense, hand-to-hand, barricade absorbs breakthrough zombies 1 HP each, then survivors take damage.
+- Status screen and day summary now show all four resources: food, ammo, materials, barricade HP.
+- Build/repair stayed one menu option on purpose - a barricade is an HP pool, so both actions are the same verb.
+
+## Change: materials are guaranteed from scavenging
+
+- Scavengers now always find 1-2 materials along with 1-4 food; ammo stays a 30% chance.
+- Tradeoff: the barricade becomes a reliable wall instead of a scarce resource. If the 10-day playtest feels too easy, the knob to turn is the barricade COST, not the drop rate.
+- Prompts updated so the Scavenge option lists materials too.
+
+## Usability: prompts and summary
+
+- Task prompts now list everything scavenging can bring back (food, materials, ammo chance).
+- Day summary shows barricade HP alongside the other resources.
+
+## New feature: horde scaling
+
+...existing text...
+- Tested: day 1 = 2-3 zombies, climbing by 2 each night as designed.
+
+## New feature: survivor arrivals
+
+...existing text...
+- Tested: Rae arrived on day 3, Kai on day 6, and they can be assigned tasks immediately.
