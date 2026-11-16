@@ -85,7 +85,7 @@ void Game::NextDay()
 	PrintDaySummary();
 
 	++mDay;
-	CheckNewArrival(); // check for a new survivor as the new day begins
+	CheckNewArrival(); // check for new survivors as the new day begins
 }
 
 // Every living survivor on Scavenge duty finds 1-4 food and
@@ -175,6 +175,7 @@ void Game::ResolveResting()
 		}
 	}
 }
+
 // Prints one labeled recap block so the player can see the day's results
 // at a glance instead of scrolling back through scattered lines.
 void Game::PrintDaySummary()
@@ -195,18 +196,18 @@ void Game::PrintDaySummary()
 }
 
 // Day 3, 6, 9... a pair of survivors finds the safehouse, up to the
-// roster cap. If only one bed is left, only one joins.
+// roster cap of 10. If only one bed is left, only one joins.
 void Game::CheckNewArrival()
 {
 	if (mDay % 3 != 0) { return; }
 
-	const int ROSTER_CAP = 6;
+	const int ROSTER_CAP = 10;
 	const int NEW_ARRIVALS = 2;
 
 	// Static locals remember where we are in the name pool between
 	// calls, so names do not repeat until the pool cycles.
-	static const char* names[] = { "Rae", "Kai", "Juno", "Ash", "Noa", "Lex" };
-	const int NAME_COUNT = 6;
+	static const char* names[] = { "Rae", "Kai", "Juno", "Ash", "Noa", "Lex", "Sky", "Rue" };
+	const int NAME_COUNT = 8;
 	static int nextName = 0;
 
 	for (int i = 0; i < NEW_ARRIVALS; i++)
