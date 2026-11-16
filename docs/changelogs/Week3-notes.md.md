@@ -34,7 +34,6 @@
 - nothing new yet this week
 
 ## New feature: barricade system
-
 - Materials finally have a use: new main menu option "Build barricade" spends 3 materials for +2 barricade HP.
 - Barricade HP lives in Safehouse (GetBarricade/AddBarricade, clamped at zero).
 - Attack is now four phases: gun defense, hand-to-hand, barricade absorbs breakthrough zombies 1 HP each, then survivors take damage.
@@ -42,22 +41,34 @@
 - Build/repair stayed one menu option on purpose - a barricade is an HP pool, so both actions are the same verb.
 
 ## Change: materials are guaranteed from scavenging
-
 - Scavengers now always find 1-2 materials along with 1-4 food; ammo stays a 30% chance.
 - Tradeoff: the barricade becomes a reliable wall instead of a scarce resource. If the 10-day playtest feels too easy, the knob to turn is the barricade COST, not the drop rate.
 - Prompts updated so the Scavenge option lists materials too.
 
 ## Usability: prompts and summary
-
 - Task prompts now list everything scavenging can bring back (food, materials, ammo chance).
 - Day summary shows barricade HP alongside the other resources.
 
 ## New feature: horde scaling
-
-...existing text...
 - Tested: day 1 = 2-3 zombies, climbing by 2 each night as designed.
 
-## New feature: survivor arrivals
-
-...existing text...
+## New feature: survivor arrivals   
 - Tested: Rae arrived on day 3, Kai on day 6, and they can be assigned tasks immediately.
+  
+## Balance playthrough
+- Ran a full 10-day playthrough. Finding: single arrivals every 3 days could not keep pace with the +2/night horde scaling; mid-game losses felt unavoidable rather than caused by bad decisions. This run motivated the tuning changes below.
+
+## Healing capped at max health - instructor feedback fix
+- Survivor::Heal had no upper limit, so resting could stack HP past 100 forever and the horde scaling stopped mattering. Added mMaxHealth (set from starting health in the constructor) and clamped Heal at it.
+
+## Input validation replaced - instructor feedback fix
+- Replaced cin.clear()/cin.ignore() in Helper::GetMenuChoice with the getline + stoi + try/catch pattern from the Day 3 and Day 5 lectures. Catches invalid_argument and out_of_range specifically, and uses the processedCharacters check so partial input like "12abc" is rejected. Tested with: potato, 12abc, a 20-digit number, 0, 6, and valid input.
+
+## New arrivals join in pairs
+- Arrivals changed from 1 to 2 survivors every 3 days. The roster-cap check moved inside the loop so a nearly-full roster takes only the survivors it has room for.
+
+## Roster cap raised 6 -> 10, name pool expanded
+- Pairs filled the old cap of 6 by day 6, which silently shut the arrival system off (day 6 added only 1, day 9 added none). Cap is now 10 and the name pool grew from 6 to 8 names so nobody repeats.
+
+## Barricade economy tuning
+- Build cost reduced 3 -> 2 materials, and the safehouse now starts with 10 materials. Deliberately generous: after the playthrough showed the game was too punishing, I overcorrected on purpose and will let the next 10-day run judge it. Kill switch agreed in advance: if that run has zero deaths AND an unbroken barricade, starting materials go to 0 - one knob per playtest.

@@ -4,6 +4,8 @@
 #include <cctype>
 #include <cstdlib>
 #include <ctime>
+#include <string>
+#include <stdexcept>
 
 // Helper Library
 // Reusable utility functions used across course projects.
@@ -82,6 +84,8 @@ namespace Helper
 	//
 	// ClearInputBuffer
 	// Clears leftover input and any fail state from previous cin use.
+	// (Kept for older course projects; the zombie sim now reads all
+	// keyboard input with getline, so this is no longer needed there.)
 	//
 	static void ClearInputBuffer()
 	{
@@ -119,27 +123,58 @@ namespace Helper
 	//
 	// GetMenuChoice
 	// Prompts until the user enters a number within [min, max].
-	// Used for all menu input in course projects.
+	// Reads the whole line with getline, converts with stoi inside
+	// try/catch, and reprompts on any failure - bad input can never
+	// crash the menu or leave cin in a fail state.
 	//
 	static unsigned int GetMenuChoice(unsigned int min, unsigned int max)
 	{
-		unsigned int choice = 0;
-
-		std::cout << "Enter a number (" << min << " - " << max << "): ";
-		while (!(std::cin >> choice) || choice < min || choice > max)
+		while (true)
 		{
-			std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			std::cout << "Invalid choice. Try again (" << min << " - " << max << "): ";
-		}
+			std::cout << "Enter a number (" << min << " - " << max << "): ";
 
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		return choice;
+			// Capture the entire line first; decide what it means after.
+			std::string input;
+			std::getline(std::cin, input);
+
+			try
+			{
+				// processedCharacters tells us how much of the string
+				// stoi actually converted.
+				std::size_t processedCharacters = 0;
+				int number = std::stoi(input, &processedCharacters);
+
+				// "12abc" converts to 12 but stops early - reject it.
+				if (processedCharacters != input.length())
+				{
+					std::cout << "Please enter numbers only.\n";
+					continue;
+				}
+
+				if (number < static_cast<int>(min) || number > static_cast<int>(max))
+				{
+					std::cout << "That number is outside the available choices.\n";
+					continue;
+				}
+
+				return static_cast<unsigned int>(number);
+			}
+			catch (const std::invalid_argument&)
+			{
+				// The text could not be converted at all ("potato", "").
+				std::cout << "Please enter a valid number.\n";
+			}
+			catch (const std::out_of_range&)
+			{
+				// The number is too big to fit in an int.
+				std::cout << "That number is way too big. Try a smaller one.\n";
+			}
+		}
 	}
 
 	//
 	// CoinFlip
-	// A coin has two sides — rand() % 2 gives 0 or 1.
+	// A coin has two sides - rand() % 2 gives 0 or 1.
 	// true = heads, false = tails.
 	//
 	static bool CoinFlip()
