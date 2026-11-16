@@ -20,7 +20,7 @@ void Game::Run()
 		std::cout << "1. View status\n";
 		std::cout << "2. Assign tasks\n";
 		std::cout << "3. Next day\n";
-		std::cout << "4. Build barricade (3 materials = +2 barricade HP)\n";
+		std::cout << "4. Build barricade (2 materials = +2 barricade HP)\n";
 		std::cout << "5. Quit\n";
 
 		// Helper re-asks until the player enters a number in range
