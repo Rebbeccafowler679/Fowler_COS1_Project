@@ -15,7 +15,8 @@ class Survivor
 {
 public:
 	// Creates a survivor with a name; health defaults to 100
-	// if no value is passed in.
+	// if no value is passed in. The starting health is also the
+	// maximum health - healing can never push HP above it.
 	Survivor(const std::string& name, int health = 100);
 
 	const std::string& GetName() const;  // name as a reference (no copy)
@@ -26,10 +27,11 @@ public:
 
 	void SetTask(Task task);       // assign today's task
 	void TakeDamage(int amount);   // subtract HP, clamps at 0 (never negative)
-	void Heal(int amount);         // add HP (no maximum cap yet)
+	void Heal(int amount);         // add HP, clamps at maximum health
 
 private:
 	std::string mName;  // survivor's display name
 	int mHealth;        // hit points; 0 = dead
+	int mMaxHealth;     // healing ceiling; set once from starting health
 	Task mTask;         // current daily assignment
 };

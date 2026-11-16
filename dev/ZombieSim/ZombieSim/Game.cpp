@@ -20,16 +20,18 @@ void Game::Run()
 		std::cout << "1. View status\n";
 		std::cout << "2. Assign tasks\n";
 		std::cout << "3. Next day\n";
-		std::cout << "4. Quit\n";
+		std::cout << "4. Build barricade (2 materials = +2 barricade HP)\n";
+		std::cout << "5. Quit\n";
 
 		// Helper re-asks until the player enters a number in range
-		unsigned int choice = Helper::GetMenuChoice(1, 4);
+		unsigned int choice = Helper::GetMenuChoice(1, 5);
 		switch (choice)
 		{
 		case 1: ViewStatus(); break;
 		case 2: AssignTasks(); break;
 		case 3: NextDay(); break;
-		case 4: running = false; break;
+		case 4: BuildBarricade(); break;
+		case 5: running = false; break;
 		}
 	}
 
@@ -55,7 +57,8 @@ void Game::AssignTasks()
 		if (!s.IsAlive()) { continue; } // dead survivors get no tasks
 
 		std::cout << "\nAssign " << s.GetName() << " (HP " << s.GetHealth() << "):\n";
-		std::cout << "1. Scavenge (find 1-4 food, 30% chance of 1-2 ammo)\n";
+		std::cout << "1. Scavenge (find 1-4 food and 1-2 materials,\n";
+		std::cout << "            30% chance of 1-2 ammo)\n";
 		std::cout << "2. Defend (repel up to 2 zombies each, 1 ammo per kill;\n";
 		std::cout << "            fights hand-to-hand and takes 3 HP if no ammo)\n";
 		std::cout << "3. Rest (heal 5 HP)\n";
@@ -66,12 +69,57 @@ void Game::AssignTasks()
 	}
 }
 
-// Runs one full day in order:
-// scavenge -> eat -> zombie attack -> game over check -> rest healing -> summary.
+// Runs one full day by calling each phase in order.
+// Refactored in Week 3: each phase is its own function, so this
+// reads like a summary of the day instead of a wall of code.
 void Game::NextDay()
 {
 	ResolveScavenging();
+	ResolveEating();
+	ResolveAttack();
 
+	CheckGameOver();
+	if (mGameOver) { return; } // skip healing and summary on the final day
+
+	ResolveResting();
+	PrintDaySummary();
+
+	++mDay;
+	CheckNewArrival(); // check for new survivors as the new day begins
+}
+
+// Every living survivor on Scavenge duty finds 1-4 food and
+// 1-2 materials, with a 30% chance of also finding 1-2 ammo.
+void Game::ResolveScavenging()
+{
+	for (Survivor& s : mSafehouse.GetSurvivors())
+	{
+		if (!s.IsAlive()) { continue; }
+		if (s.GetTask() == Task::Scavenge)
+		{
+			int found = rand() % 4 + 1; // 1 to 4 food
+			mSafehouse.AddFood(found);
+			std::cout << s.GetName() << " scavenged " << found << " food.\n";
+
+			// materials are guaranteed, just like food
+			int mats = rand() % 2 + 1; // 1 to 2 materials
+			mSafehouse.AddMaterials(mats);
+			std::cout << s.GetName() << " also salvaged " << mats << " materials!\n";
+
+			if (rand() % 100 < 30)
+			{
+				int ammo = rand() % 2 + 1; // 1 to 2 ammo
+				mSafehouse.AddAmmo(ammo);
+				std::cout << s.GetName() << " also found " << ammo << " ammo!\n";
+			}
+		}
+	}
+}
+
+// Each living survivor eats 1 food. If there is not enough,
+// food hits zero and hunger deals 10 damage to everyone alive.
+void Game::ResolveEating()
+{
 	// count how many mouths need feeding
 	int mouths = 0;
 	for (Survivor& s : mSafehouse.GetSurvivors())
@@ -87,55 +135,11 @@ void Game::NextDay()
 	}
 	else
 	{
-		// not enough: food hits zero and hunger deals 10 damage to each survivor
 		mSafehouse.AddFood(-mSafehouse.GetFood());
 		std::cout << "Not enough food! The group goes hungry.\n";
 		for (Survivor& s : mSafehouse.GetSurvivors())
 		{
 			if (s.IsAlive()) { s.TakeDamage(10); }
-		}
-	}
-
-	ResolveAttack();
-
-	// if the attack (or hunger) killed the last survivor, end here:
-	// skip healing, skip the summary, and do not advance the day counter
-	CheckGameOver();
-	if (mGameOver) { return; }
-
-	// survivors assigned to Rest recover 5 HP
-	for (Survivor& s : mSafehouse.GetSurvivors())
-	{
-		if (s.IsAlive() && s.GetTask() == Task::Rest)
-		{
-			s.Heal(5);
-		}
-	}
-
-	PrintDaySummary(); // recap everything that happened today
-
-	++mDay;
-}
-
-// Every living survivor on Scavenge duty finds 1-4 food,
-// with a 30% chance of also finding 1-2 ammo.
-void Game::ResolveScavenging()
-{
-	for (Survivor& s : mSafehouse.GetSurvivors())
-	{
-		if (!s.IsAlive()) { continue; }
-		if (s.GetTask() == Task::Scavenge)
-		{
-			int found = rand() % 4 + 1; // 1 to 4 food
-			mSafehouse.AddFood(found);
-			std::cout << s.GetName() << " scavenged " << found << " food.\n";
-
-			if (rand() % 100 < 30)
-			{
-				int ammo = rand() % 2 + 1; // 1 to 2 ammo
-				mSafehouse.AddAmmo(ammo);
-				std::cout << s.GetName() << " also found " << ammo << " ammo!\n";
-			}
 		}
 	}
 }
@@ -160,6 +164,18 @@ void Game::CheckGameOver()
 	std::cout << "You survived " << mDay << " day(s).\n";
 }
 
+// Survivors assigned to Rest recover 5 HP.
+void Game::ResolveResting()
+{
+	for (Survivor& s : mSafehouse.GetSurvivors())
+	{
+		if (s.IsAlive() && s.GetTask() == Task::Rest)
+		{
+			s.Heal(5);
+		}
+	}
+}
+
 // Prints one labeled recap block so the player can see the day's results
 // at a glance instead of scrolling back through scattered lines.
 void Game::PrintDaySummary()
@@ -169,11 +185,62 @@ void Game::PrintDaySummary()
 		<< " of " << mSafehouse.GetSurvivors().size() << "\n";
 	std::cout << "Food: " << mSafehouse.GetFood()
 		<< "  Ammo: " << mSafehouse.GetAmmo()
-		<< "  Materials: " << mSafehouse.GetMaterials() << "\n";
+		<< "  Materials: " << mSafehouse.GetMaterials()
+		<< "  Barricade HP: " << mSafehouse.GetBarricade() << "\n";
 	for (const Survivor& s : mSafehouse.GetSurvivors())
 	{
 		std::cout << "  " << s.GetName() << " | HP: " << s.GetHealth()
 			<< (s.IsAlive() ? "" : " (DEAD)") << "\n";
 	}
 	std::cout << "----------------------------\n";
+}
+
+// Day 3, 6, 9... a pair of survivors finds the safehouse, up to the
+// roster cap of 10. If only one bed is left, only one joins.
+void Game::CheckNewArrival()
+{
+	if (mDay % 3 != 0) { return; }
+
+	const int ROSTER_CAP = 10;
+	const int NEW_ARRIVALS = 2;
+
+	// Static locals remember where we are in the name pool between
+	// calls, so names do not repeat until the pool cycles.
+	static const char* names[] = { "Rae", "Kai", "Juno", "Ash", "Noa", "Lex", "Sky", "Rue" };
+	const int NAME_COUNT = 8;
+	static int nextName = 0;
+
+	for (int i = 0; i < NEW_ARRIVALS; i++)
+	{
+		if (mSafehouse.GetSurvivors().size() >= ROSTER_CAP)
+		{
+			return; // roster full - no room for anyone else tonight
+		}
+
+		std::string name = names[nextName % NAME_COUNT];
+		nextName++;
+
+		mSafehouse.AddSurvivor(name);
+		std::cout << "\n*** " << name << " has joined the safehouse! ***\n";
+	}
+}
+
+// Menu option 4: spend 2 materials to add 2 barricade HP.
+// Fails gracefully if the player cannot afford it.
+void Game::BuildBarricade()
+{
+	const int COST = 2;
+	const int HP_GAIN = 2;
+
+	if (mSafehouse.GetMaterials() < COST)
+	{
+		std::cout << "Not enough materials! Need " << COST
+			<< ", you have " << mSafehouse.GetMaterials() << ".\n";
+		return;
+	}
+
+	mSafehouse.AddMaterials(-COST);
+	mSafehouse.AddBarricade(HP_GAIN);
+	std::cout << "Barricade reinforced! +" << HP_GAIN << " barricade HP (now "
+		<< mSafehouse.GetBarricade() << ").\n";
 }

@@ -38,9 +38,9 @@ WEEK 1 -- This week I set up my GitHub workflow (repo, dev branch, Project board
 
 WEEK 2 -- This week I built the Zombie class and wired nightly attacks into the day cycle. Hordes scale with the day count, defenders repel zombies using ammo, and breakthrough zombies injure or kill survivors. I also added a game over condition with an end screen, a day summary screen, and a usability pass on the menus. I completed my Milestone 2 planning worksheet before coding and kept my design notes and changelog current all week.
 
-WEEK 3 --
+WEEK 3 -- This week was about refining and expanding. I refactored NextDay() into small single-purpose functions so the day cycle reads as a checklist of phases, then added three new systems: survivors arrive every 3 days (roster capped at 6), the horde grows by 2 zombies every night, and a barricade system that spends materials to absorb breakthrough zombies. Materials finally have a real use, and the status screen and day summary now show all four resources.
 
-WEEK 4 
+WEEK 4 --
 
 
 --
@@ -51,7 +51,7 @@ WEEK 1 -- A missing closing brace in my helper header broke the entire build in 
 
 WEEK 2 -- Two hard moments this week. First, an LNK2019 linker error that turned out to be a missing function body - the header made a promise the cpp file never kept. Second, simple typos (Survior, defender vs defenders) that cascaded into scary-looking error lists. Both taught me the same lesson: read the actual error, find the file and line, and do not guess. I also learned to trust Rebuild over IntelliSense squiggles, since E-codes can linger after the real fix.
 
-WEEK 3 --
+WEEK 3 -- The main challenge was keeping track of changes spread across five files, and knowing which files actually needed to change. I hit that question directly with Zombie.h - and learned the answer: the header is the contract, the cpp is the delivery. Since the barricade only changed what happens INSIDE Attack(), Zombie.h stayed untouched. I also had to make a real design call on materials: guaranteed drops make the barricade reliable but risk making the game too easy, so I documented which knob to turn (barricade cost, not drop rate) if the balance test says so.
 
 WEEK 4 --
 <br>
@@ -61,7 +61,7 @@ WEEK 1 -- I leveled up at error-driven debugging — tracing C1075 to its root c
 
 WEEK 2 -- I leveled up on memory management discipline. The nightly horde lives on the stack because it never outlives one attack, and the breakthrough phase uses a vector of pointers to living survivors as a target pool, so dead survivors leave the target list but stay in the real roster. Both were deliberate decisions I documented in my prototype notes. I also got faster at classifying errors: E-codes vs C-codes vs LNK-codes.
 
-WEEK 3 --
+WEEK 3 -- I leveled up on refactoring discipline: changing the structure of working code without changing its behavior, then proving it by playing several days and comparing before and after. I also learned how static local variables remember their value between function calls, which powers the newcomer name pool, and I got faster at moving work through the full GitHub cycle - Issue, branch commit with Closes, board status update.
 
 WEEK 4 --
 <br>
@@ -71,7 +71,7 @@ WEEK 1 -- For Week 2 I'm planning zombie attacks against the safehouse, giving t
 
 WEEK 2 --Before Week 3 I want to give materials a real use (like barricade repairs), add a maximum health cap so Rest cannot heal forever, and look at a difficulty curve beyond just bigger hordes. I also want to keep the commit-little-and-often habit going, since my history this week actually showed the project evolving.
 
-WEEK 3 --
+WEEK 3 -- Before the next milestone I want to run the full 10-day balance playtest and log the results, finish the edge case testing pass (bad menu input, zero-ammo defense, hunger-only game over), and tune the barricade cost if the game plays too easy. After that, the next big feature candidate is a win condition, because right now the game can only be lost, never won.
 
 WEEK 4 --
 
@@ -87,7 +87,7 @@ This week I built the Zombie class and wired nightly attacks into the day cycle:
 
 ### Week 3
 
-Stay tuned, this stand up is coming soon...
+End of week stand-up: This week I refactored NextDay() into small phase functions (scavenge, eat, attack, game over, rest, summary) so it reads like a checklist instead of a wall of code, then added three new systems: survivors arrive every 3 days, the horde grows by 2 zombies every night, and a barricade that absorbs breakthrough zombies, built with materials that scavengers now always bring back. My main challenge was keeping the changes straight across five files, and I finally understood the rule: the header is the contract, the cpp is the delivery - the barricade changed what Attack() does without touching Zombie.h at all. I leveled up on refactoring discipline: changing structure without changing behavior, then proving it by playing and comparing. Next week I want to run the full 10-day balance playtest, finish the edge case testing pass, and see if the barricade cost needs tuning.
 
 ### Week 4
 
