@@ -1,10 +1,12 @@
 #include "Survivor.h"
 
 // Constructor: sets the name and health (defaults to 100 from the header).
+// The starting health is remembered as mMaxHealth, so healing can
+// never push a survivor above the HP they started with.
 // New survivors start on Rest so an unassigned survivor never
 // accidentally fights or scavenges.
 Survivor::Survivor(const std::string& name, int health)
-	: mName(name), mHealth(health), mTask(Task::Rest)
+	: mName(name), mHealth(health), mMaxHealth(health), mTask(Task::Rest)
 {
 }
 
@@ -27,11 +29,13 @@ void Survivor::TakeDamage(int amount)
 	if (mHealth < 0) { mHealth = 0; }	// never below 0
 }
 
-// Rest healing. Intentionally no maximum health cap yet;
-// a cap could be a future balance feature.
+// Rest healing. Clamps at mMaxHealth so survivors cannot heal
+// past their starting health - this keeps the horde scaling
+// meaningful over a long game.
 void Survivor::Heal(int amount)
 {
-	mHealth += amount;	// no max health cap
+	mHealth += amount;
+	if (mHealth > mMaxHealth) { mHealth = mMaxHealth; }	// never above max
 }
 
 // Converts the Task enum to readable text for status screens.

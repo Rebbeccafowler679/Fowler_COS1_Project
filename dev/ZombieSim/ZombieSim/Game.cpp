@@ -194,29 +194,41 @@ void Game::PrintDaySummary()
 	std::cout << "----------------------------\n";
 }
 
-// Every 3rd day (day 3, 6, 9...) a new survivor joins the safehouse.
-// The roster is capped at 6 so task assignment stays manageable.
+// Day 3, 6, 9... a pair of survivors finds the safehouse, up to the
+// roster cap. If only one bed is left, only one joins.
 void Game::CheckNewArrival()
 {
-	if (mDay % 3 != 0) { return; }                         // not an arrival day
-	if (mSafehouse.GetSurvivors().size() >= 6) { return; } // roster full
+	if (mDay % 3 != 0) { return; }
 
-	// cycle through a small pool of names for newcomers
-	// static means the counter remembers its value between calls
-	static const char* names[] = { "Rae", "Kai", "Juno" };
+	const int ROSTER_CAP = 6;
+	const int NEW_ARRIVALS = 2;
+
+	// Static locals remember where we are in the name pool between
+	// calls, so names do not repeat until the pool cycles.
+	static const char* names[] = { "Rae", "Kai", "Juno", "Ash", "Noa", "Lex" };
+	const int NAME_COUNT = 6;
 	static int nextName = 0;
-	std::string name = names[nextName % 3];
-	nextName++;
 
-	mSafehouse.AddSurvivor(name);
-	std::cout << "\n*** " << name << " has joined the safehouse! ***\n";
+	for (int i = 0; i < NEW_ARRIVALS; i++)
+	{
+		if (mSafehouse.GetSurvivors().size() >= ROSTER_CAP)
+		{
+			return; // roster full - no room for anyone else tonight
+		}
+
+		std::string name = names[nextName % NAME_COUNT];
+		nextName++;
+
+		mSafehouse.AddSurvivor(name);
+		std::cout << "\n*** " << name << " has joined the safehouse! ***\n";
+	}
 }
 
-// Menu option 4: spend 3 materials to add 2 barricade HP.
+// Menu option 4: spend 2 materials to add 2 barricade HP.
 // Fails gracefully if the player cannot afford it.
 void Game::BuildBarricade()
 {
-	const int COST = 3;
+	const int COST = 2;
 	const int HP_GAIN = 2;
 
 	if (mSafehouse.GetMaterials() < COST)

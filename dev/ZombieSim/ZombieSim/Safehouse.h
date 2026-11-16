@@ -32,7 +32,7 @@ public:
 private:
 	int mFood = 10;                      // starting food
 	int mAmmo = 5;                       // starting ammo
-	int mMaterials = 0;                  // starting materials
+	int mMaterials = 10;                  // starting materials
 	int mBarricade = 0;                  // starts at zero - the player builds it up
 	std::vector<Survivor> mSurvivors;    // everyone living (and dead) in the safehouse
 };
