@@ -21,6 +21,7 @@ private:
 	void CheckNewArrival();    // new survivor joins every 3 days (roster cap 6)
 	void ResolveResting();     // survivors assigned to Rest heal 5 HP
 	void PrintDaySummary();    // prints one recap block at the end of each day
+	void CheckWinCondition();	// day 21 dawn = rescue arrives, game won
 
 	Safehouse mSafehouse;   // the safehouse: resources + the survivor roster
 	int mDay = 1;           // current day number, used for display and horde scaling

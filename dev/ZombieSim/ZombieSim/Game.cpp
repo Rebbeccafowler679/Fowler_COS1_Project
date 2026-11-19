@@ -84,8 +84,10 @@ void Game::NextDay()
 	ResolveResting();
 	PrintDaySummary();
 
-	++mDay;
-	CheckNewArrival(); // check for new survivors as the new day begins
+	++mDay; 
+	CheckWinCondition();       // dawn of day 21 ends the game
+	if (mGameOver) { return; } // no arrivals after the rescue
+	CheckNewArrival();         // check for new survivors as the new day begins
 }
 
 // Every living survivor on Scavenge duty finds 1-4 food and
@@ -162,6 +164,21 @@ void Game::CheckGameOver()
 	std::cout << "\n===== GAME OVER =====\n";
 	std::cout << "The last survivor has fallen. The safehouse is lost.\n";
 	std::cout << "You survived " << mDay << " day(s).\n";
+}
+
+// Win rule: survive to the dawn of day 21 and rescue arrives.
+// Uses the same mGameOver flag as losing - the flag just means
+// "the game ends now," and the screen says which ending you got.
+void Game::CheckWinCondition()
+{
+	const int WIN_DAY = 20;
+	if (mDay <= WIN_DAY) { return; } // not rescued yet
+
+	mGameOver = true;
+	std::cout << "\n===== RESCUED! =====\n";
+	std::cout << "At dawn on day 21, you hear engines on the highway.\n";
+	std::cout << mSafehouse.GetAliveCount() << " survivor(s) made it out alive.\n";
+	std::cout << "The safehouse held. You won.\n";
 }
 
 // Survivors assigned to Rest recover 5 HP.
