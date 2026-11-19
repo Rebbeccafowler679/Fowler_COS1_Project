@@ -218,7 +218,7 @@ void Game::CheckNewArrival()
 {
 	if (mDay % 3 != 0) { return; }
 
-	const int ROSTER_CAP = 10;
+	const int ROSTER_CAP = 11;
 	const int NEW_ARRIVALS = 2;
 
 	// Static locals remember where we are in the name pool between
