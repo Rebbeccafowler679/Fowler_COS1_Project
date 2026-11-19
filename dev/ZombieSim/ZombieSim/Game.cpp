@@ -13,10 +13,12 @@ void Game::Run()
 	mSafehouse.AddSurvivor("Dre");
 	mSafehouse.AddSurvivor("Sam");
 
+	std::cout << "Survive 20 days. Rescue arrives at dawn on day 21.\n";
+
 	bool running = true;
 	while (running && !mGameOver)
 	{
-		std::cout << "\n===== ZOMBIE SURVIVAL - Day " << mDay << " =====\n";
+		std::cout << "\n===== ZOMBIE SURVIVAL - Day " << mDay << " of 20 =====\n";
 		std::cout << "1. View status\n";
 		std::cout << "2. Assign tasks\n";
 		std::cout << "3. Next day\n";
@@ -84,7 +86,7 @@ void Game::NextDay()
 	ResolveResting();
 	PrintDaySummary();
 
-	++mDay; 
+	++mDay;
 	CheckWinCondition();       // dawn of day 21 ends the game
 	if (mGameOver) { return; } // no arrivals after the rescue
 	CheckNewArrival();         // check for new survivors as the new day begins
@@ -213,7 +215,7 @@ void Game::PrintDaySummary()
 }
 
 // Day 3, 6, 9... a pair of survivors finds the safehouse, up to the
-// roster cap of 10. If only one bed is left, only one joins.
+// roster cap of 11. If only one bed is left, only one joins.
 void Game::CheckNewArrival()
 {
 	if (mDay % 3 != 0) { return; }
