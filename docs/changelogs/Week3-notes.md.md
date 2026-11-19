@@ -19,9 +19,9 @@
 
 ## New feature: survivor arrivals 
 
-- Every 3rd day (3, 6, 9...) a new survivor joins the safehouse, with a welcome message.
-- Roster capped at 6 so task assignment stays manageable.
-- Learned: static local variables remember their value between function calls - used to cycle through the newcomer name pool (Rae, Kai, Juno).
+- Every 3rd day (3, 6, 9...) a 2 survivor joins the safehouse, with a welcome message.
+- Roster capped at 11 so task assignment stays manageable.
+- Learned: static local variables remember their value between function calls - used to cycle through the newcomer name pool  Rae, Kai, Juno, Ash, Noa, Lex, Sky, Rue
 
 ## Design decisions
 
@@ -34,7 +34,7 @@
 - nothing new yet this week
 
 ## New feature: barricade system
-- Materials finally have a use: new main menu option "Build barricade" spends 3 materials for +2 barricade HP.
+- Materials finally have a use: new main menu option "Build barricade" spends 2 materials for +2 barricade HP.
 - Barricade HP lives in Safehouse (GetBarricade/AddBarricade, clamped at zero).
 - Attack is now four phases: gun defense, hand-to-hand, barricade absorbs breakthrough zombies 1 HP each, then survivors take damage.
 - Status screen and day summary now show all four resources: food, ammo, materials, barricade HP.
@@ -67,8 +67,8 @@
 ## New arrivals join in pairs
 - Arrivals changed from 1 to 2 survivors every 3 days. The roster-cap check moved inside the loop so a nearly-full roster takes only the survivors it has room for.
 
-## Roster cap raised 6 -> 10, name pool expanded
-- Pairs filled the old cap of 6 by day 6, which silently shut the arrival system off (day 6 added only 1, day 9 added none). Cap is now 10 and the name pool grew from 6 to 8 names so nobody repeats.
+## Roster cap raised 6 -> 11, name pool expanded
+- Pairs filled the old cap of 6 by day 6, which silently shut the arrival system off (day 6 added only 1, day 9 added none). Cap is now 11 and the name pool grew from 6 to 8 names so nobody repeats.
 
 ## Barricade economy tuning
 - Build cost reduced 3 -> 2 materials, and the safehouse now starts with 10 materials. Deliberately generous: after the playthrough showed the game was too punishing, I overcorrected on purpose and will let the next 10-day run judge it. Kill switch agreed in advance: if that run has zero deaths AND an unbroken barricade, starting materials go to 0 - one knob per playtest.
