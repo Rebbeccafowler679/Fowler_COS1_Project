@@ -40,7 +40,7 @@ WEEK 2 -- This week I built the Zombie class and wired nightly attacks into the 
 
 WEEK 3 -- This week was about refining and expanding. I refactored NextDay() into small single-purpose functions so the day cycle reads as a checklist of phases, then added three new systems: survivors arrive every 3 days (roster capped at 6), the horde grows by 2 zombies every night, and a barricade system that spends materials to absorb breakthrough zombies. Materials finally have a real use, and the status screen and day summary now show all four resources.
 
-WEEK 4 --
+WEEK 4 -- This week I finished the game. I added the win condition - survive 20 days and rescue arrives at dawn of day 21 - then proved the balance with a full manual playthrough (rescued with 3 survivors left, 7 lost on day 20) and scripted strategy runs dated 2026-11-19. I closed with a refactoring and usability pass: comments synced to the shipped code, and the game now tells the player the goal up front with a "Day X of 20" banner.
 
 
 --
@@ -53,7 +53,7 @@ WEEK 2 -- Two hard moments this week. First, an LNK2019 linker error that turned
 
 WEEK 3 -- The main challenge was keeping track of changes spread across five files, and knowing which files actually needed to change. I hit that question directly with Zombie.h - and learned the answer: the header is the contract, the cpp is the delivery. Since the barricade only changed what happens INSIDE Attack(), Zombie.h stayed untouched. I also had to make a real design call on materials: guaranteed drops make the barricade reliable but risk making the game too easy, so I documented which knob to turn (barricade cost, not drop rate) if the balance test says so.
 
-WEEK 4 --
+WEEK 4 -- The sneakiest bugs this week were not in the code, they were in the comments. My arrival comment said roster cap 6 while the code shipped pairs up to 11, and the comment inside the same function said 10. Reconciling code, comments, and docs to one number taught me that a comment that disagrees with its code is a bug. I also had to hold the feature freeze: the scripted runs proved the barricade is the dominant strategy, and I wrote the rebalance idea down for after the course instead of shipping it the week of the deadline.
 <br>
 🏆 Accomplishments: What you learned or leveled up.
 
@@ -63,7 +63,7 @@ WEEK 2 -- I leveled up on memory management discipline. The nightly horde lives 
 
 WEEK 3 -- I leveled up on refactoring discipline: changing the structure of working code without changing its behavior, then proving it by playing several days and comparing before and after. I also learned how static local variables remember their value between function calls, which powers the newcomer name pool, and I got faster at moving work through the full GitHub cycle - Issue, branch commit with Closes, board status update.
 
-WEEK 4 --
+WEEK 4 -- I leveled up on testing discipline: I set the kill switch BEFORE running the final test (zero deaths AND an unbroken barricade would send starting materials to 0), and since the real run had 7 deaths and a broken barricade, the tuning stood as-is. Deciding the rule before seeing the results kept me honest. I also got comfortable reading my own game as data - the scripted runs showed my human win sits below optimal play, which is exactly the difficulty I was aiming for.
 <br>
 🔮 Next Steps: Priorities before next milestone.
 
@@ -73,7 +73,7 @@ WEEK 2 --Before Week 3 I want to give materials a real use (like barricade repai
 
 WEEK 3 -- Before the next milestone I want to run the full 10-day balance playtest and log the results, finish the edge case testing pass (bad menu input, zero-ammo defense, hunger-only game over), and tune the barricade cost if the game plays too easy. After that, the next big feature candidate is a win condition, because right now the game can only be lost, never won.
 
-WEEK 4 --
+WEEK 4 -- Finish the Showcase presentation, merge the final dev to main PR, and verify the board is fully closed. After the course: memory management for real (pointers, new/delete, smart pointers), and the design idea I parked - let melee defenders block 2 zombies each so a defense build becomes a second viable strategy next to the barricade.
 
 <br>
 
@@ -91,4 +91,4 @@ End of week stand-up: This week I refactored NextDay() into small phase function
 
 ### Week 4
 
-My final stand up...
+My final stand-up: This week I finished the Zombie Survival Sim by adding the win condition - survive 20 days and rescue arrives at dawn of day 21 - then proved it with a full manual playthrough that ended with 3 survivors rescued and 7 lost on the final day, plus scripted strategy runs confirming that only barricade-heavy play wins consistently. My biggest challenge was documentation bugs: stale comments that disagreed with the shipped code, fixed by syncing every comment and doc to the real tuning values. I leveled up on testing discipline by setting the kill-switch rule before running the final balance test, so the results decided whether tuning changed instead of my feelings. Next up is the Showcase and the final dev-to-main PR, and after the course I want to learn memory management for real and revisit the defense rebalance I deliberately did not ship this week.
